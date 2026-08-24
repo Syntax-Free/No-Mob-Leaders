@@ -16,7 +16,8 @@ public abstract class ZombieMixin {
 
     @Inject(
             method = "finalizeSpawn",
-            at = @At("TAIL")
+            at = @At("TAIL"),
+            require = 0
     )
     private void onFinalizeSpawn(
             ServerLevelAccessor level,
