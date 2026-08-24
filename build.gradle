@@ -17,7 +17,6 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-    // Official Mojang Mappings (keeps your code matching Mojmap so you don't have to rewrite in Yarn)
     mappings loom.officialMojangMappings()
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
