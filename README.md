@@ -29,3 +29,7 @@ A very simple and straightforward config file located at `config/no-mob-leaders`
 ```
 * Supports entity tags using `#namespace:tag_name` syntax.
 * `/nomobleaders reload` to reload the config file without restarting the server.
+
+---
+
+God, I love having to do the same work 4 times just to port them between versions.
