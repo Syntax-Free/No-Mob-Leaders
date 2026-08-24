@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "no_mob_leaders",
+  "version": "${version}",
+  "name": "No Mob Leaders",
+  "description": "Configurable mod to disable leader bonuses and extra HP on zombies and zombified piglins.",
+  "authors": [
+    "syntaxfree"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/no_mob_leaders/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.syntaxfree.no_mob_leaders.NoMobLeaders"
+    ]
+  },
+  "mixins": [
+    "no_mob_leaders.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
