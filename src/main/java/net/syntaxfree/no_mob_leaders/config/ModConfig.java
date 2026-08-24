@@ -2,12 +2,11 @@ package net.syntaxfree.no_mob_leaders.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.slf4j.Logger;
@@ -41,7 +40,6 @@ public class ModConfig {
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
-            .setStrictness(Strictness.LENIENT)
             .create();
 
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("no_mob_leaders.json");
@@ -61,7 +59,7 @@ public class ModConfig {
 
                 try (BufferedReader reader = Files.newBufferedReader(CONFIG_PATH, StandardCharsets.UTF_8);
                      JsonReader jsonReader = new JsonReader(reader)) {
-                    jsonReader.setStrictness(Strictness.LENIENT);
+                    jsonReader.setLenient(true);
 
                     ModConfig loaded = GSON.fromJson(jsonReader, ModConfig.class);
                     if (loaded == null) {
@@ -174,7 +172,7 @@ public class ModConfig {
                         if (!tagString.contains(":")) {
                             tagString = "minecraft:" + tagString;
                         }
-                        Identifier tagId = Identifier.tryParse(tagString);
+                        ResourceLocation tagId = ResourceLocation.tryParse(tagString);
                         if (tagId != null) {
                             tags.add(TagKey.create(Registries.ENTITY_TYPE, tagId));
                         } else {
@@ -184,7 +182,7 @@ public class ModConfig {
                         if (!entry.contains(":")) {
                             entry = "minecraft:" + entry;
                         }
-                        Identifier id = Identifier.tryParse(entry);
+                        ResourceLocation id = ResourceLocation.tryParse(entry);
                         if (id != null) {
                             var entityOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(id);
                             if (entityOpt.isPresent()) {
