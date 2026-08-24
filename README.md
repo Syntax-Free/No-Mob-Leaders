@@ -19,7 +19,7 @@ Minecraft’s "Leader Zombie" mechanic is an absolute crime against automated ef
 Mojang in their infinite wisdom decided that occasionally, a zombie or zombified piglin deserves **extra bonus health** and the ability to call backup. In practice, this means:
 1. You build a perfectly calibrated fall-damage mob grinder.
 2. 95% of the mobs die instantly like respectful digital peasants.
-3. The remaining 5% survive because they have a *"Leader Attribute Modifier"*, taking up valuable space in the mob cap and surviving on half a heart.
+3. The remaining 5% survive because they have a *"Leader Attribute Modifier"*, taking up valuable space in the mob cap.
 
 I don't negotiate with hostile mobs, and I certainly don't tolerate unoptimized farms. **No Mob Leaders** wipes these modifiers from existence the exact millisecond an entity finalizes its spawn.
 
