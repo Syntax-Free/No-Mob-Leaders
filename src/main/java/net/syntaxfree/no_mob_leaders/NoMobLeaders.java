@@ -6,11 +6,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.syntaxfree.no_mob_leaders.config.ModConfig;
 
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ public class NoMobLeaders implements ModInitializer {
     @SuppressWarnings("unused")
     public static final String MOD_ID = "no_mob_leaders";
 
-    private static final ResourceLocation VANILLA_LEADER_BONUS = ResourceLocation.tryParse("minecraft:leader_zombie_bonus");
-    private static final ResourceLocation VANILLA_REINFORCEMENT_CALLER = ResourceLocation.tryParse("minecraft:reinforcement_caller_charge");
-    private static final ResourceLocation VANILLA_REINFORCEMENT_CALLEE = ResourceLocation.tryParse("minecraft:reinforcement_callee_charge");
+    private static final Identifier VANILLA_LEADER_BONUS = Identifier.tryParse("minecraft:leader_zombie_bonus");
+    private static final Identifier VANILLA_REINFORCEMENT_CALLER = Identifier.tryParse("minecraft:reinforcement_caller_charge");
+    private static final Identifier VANILLA_REINFORCEMENT_CALLEE = Identifier.tryParse("minecraft:reinforcement_callee_charge");
 
     @Override
     public void onInitialize() {
@@ -34,7 +34,7 @@ public class NoMobLeaders implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("nomobleaders")
-                        .requires(source -> source.hasPermission(2))
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("reload")
                                 .executes(context -> {
                                     ModConfig.load();
@@ -91,9 +91,9 @@ public class NoMobLeaders implements ModInitializer {
             return false;
         }
 
-        List<ResourceLocation> toRemove = null;
+        List<Identifier> toRemove = null;
         for (AttributeModifier modifier : modifiers) {
-            ResourceLocation id = modifier.id();
+            Identifier id = modifier.id();
             if (isTargetLeaderModifier(id)) {
                 if (toRemove == null) {
                     toRemove = new ArrayList<>(2);
@@ -103,7 +103,7 @@ public class NoMobLeaders implements ModInitializer {
         }
 
         if (toRemove != null) {
-            for (ResourceLocation id : toRemove) {
+            for (Identifier id : toRemove) {
                 attribute.removeModifier(id);
             }
             return true;
@@ -112,7 +112,7 @@ public class NoMobLeaders implements ModInitializer {
         return false;
     }
 
-    private static boolean isTargetLeaderModifier(ResourceLocation id) {
+    private static boolean isTargetLeaderModifier(Identifier id) {
         if (id == null || !"minecraft".equals(id.getNamespace())) {
             return false;
         }

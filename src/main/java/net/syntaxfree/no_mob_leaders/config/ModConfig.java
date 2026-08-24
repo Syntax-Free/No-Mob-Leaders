@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonReader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.slf4j.Logger;
@@ -173,7 +173,7 @@ public class ModConfig {
                         if (!tagString.contains(":")) {
                             tagString = "minecraft:" + tagString;
                         }
-                        ResourceLocation tagId = ResourceLocation.tryParse(tagString);
+                        Identifier tagId = Identifier.tryParse(tagString);
                         if (tagId != null) {
                             tags.add(TagKey.create(Registries.ENTITY_TYPE, tagId));
                         } else {
@@ -183,7 +183,7 @@ public class ModConfig {
                         if (!entry.contains(":")) {
                             entry = "minecraft:" + entry;
                         }
-                        ResourceLocation id = ResourceLocation.tryParse(entry);
+                        Identifier id = Identifier.tryParse(entry);
                         if (id != null) {
                             var entityOpt = BuiltInRegistries.ENTITY_TYPE.getOptional(id);
                             if (entityOpt.isPresent()) {
