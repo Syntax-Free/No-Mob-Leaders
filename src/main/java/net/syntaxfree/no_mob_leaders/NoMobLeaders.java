@@ -26,14 +26,13 @@ public class NoMobLeaders implements ModInitializer {
     private static final Identifier VANILLA_REINFORCEMENT_CALLEE = Identifier.tryParse("minecraft:reinforcement_callee_charge");
 
     @Override
-    @SuppressWarnings("unused")
     public void onInitialize() {
         ModConfig.load();
 
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> ModConfig.rebuildCache());
-        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> ModConfig.rebuildCache());
+        ServerLifecycleEvents.SERVER_STARTED.register(_ -> ModConfig.rebuildCache());
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((_, _, _) -> ModConfig.rebuildCache());
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
+        CommandRegistrationCallback.EVENT.register((dispatcher, _, _) -> dispatcher.register(
                 Commands.literal("nomobleaders")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("reload")
@@ -64,18 +63,14 @@ public class NoMobLeaders implements ModInitializer {
 
         if (config.removeHealthBonus) {
             AttributeInstance maxHealthAttr = zombie.getAttribute(Attributes.MAX_HEALTH);
-            if (removeLeaderModifiers(maxHealthAttr, config)) {
+            if (removeLeaderModifiers(maxHealthAttr)) {
                 removedHealthBonus = true;
             }
         }
 
         if (config.removeReinforcementBonus) {
             AttributeInstance reinforcementAttr = zombie.getAttribute(Attributes.SPAWN_REINFORCEMENTS_CHANCE);
-            removeLeaderModifiers(reinforcementAttr, config);
-        }
-
-        if (config.removeDoorBreakingBonus && zombie.canBreakDoors()) {
-            zombie.setCanBreakDoors(false);
+            removeLeaderModifiers(reinforcementAttr);
         }
 
         if (removedHealthBonus) {
@@ -86,7 +81,7 @@ public class NoMobLeaders implements ModInitializer {
         }
     }
 
-    private static boolean removeLeaderModifiers(AttributeInstance attribute, ModConfig config) {
+    private static boolean removeLeaderModifiers(AttributeInstance attribute) {
         if (attribute == null) {
             return false;
         }
@@ -99,7 +94,7 @@ public class NoMobLeaders implements ModInitializer {
         List<Identifier> toRemove = null;
         for (AttributeModifier modifier : modifiers) {
             Identifier id = modifier.id();
-            if (isTargetLeaderModifier(id, config)) {
+            if (isTargetLeaderModifier(id)) {
                 if (toRemove == null) {
                     toRemove = new ArrayList<>(2);
                 }
@@ -117,28 +112,16 @@ public class NoMobLeaders implements ModInitializer {
         return false;
     }
 
-    private static boolean isTargetLeaderModifier(Identifier id, ModConfig config) {
-        if (id == null) {
+    private static boolean isTargetLeaderModifier(Identifier id) {
+        if (id == null || !"minecraft".equals(id.getNamespace())) {
             return false;
-        }
-
-        if (ModConfig.isCustomModifierTargeted(id)) {
-            return true;
         }
 
         if (id.equals(VANILLA_LEADER_BONUS) || id.equals(VANILLA_REINFORCEMENT_CALLER) || id.equals(VANILLA_REINFORCEMENT_CALLEE)) {
             return true;
         }
 
-        if (config.onlyRemoveVanillaModifiers) {
-            if ("minecraft".equals(id.getNamespace())) {
-                String path = id.getPath();
-                return path.contains("leader") || path.contains("reinforcement");
-            }
-            return false;
-        } else {
-            String path = id.getPath();
-            return path.contains("leader") || path.contains("reinforcement");
-        }
+        String path = id.getPath();
+        return path.contains("leader") || path.contains("reinforcement");
     }
 }
